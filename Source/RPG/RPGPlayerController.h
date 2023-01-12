@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "RPGPlayerController.generated.h"
 
 /** Forward declaration to improve compiling times */
@@ -40,11 +41,20 @@ protected:
 	void OnSetDestinationReleased();
 	void OnTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void CheckDistance(FVector playerPos, FVector destination);
 
 private:
 	bool bInputPressed; // Input is bring pressed
 	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed
+
+public:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TurnSettings)
+	bool canRun;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TurnSettings)
+	bool canAttack;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TurnSettings)
+	float maxMoveDistance;
 };
 
 

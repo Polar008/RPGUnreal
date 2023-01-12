@@ -7,6 +7,7 @@
 #include "NiagaraFunctionLibrary.h"
 #include "RPGCharacter.h"
 #include "Engine/World.h"
+#include "Kismet/KismetMathLibrary.h"
 
 ARPGPlayerController::ARPGPlayerController()
 {
@@ -101,4 +102,9 @@ void ARPGPlayerController::OnTouchReleased(const ETouchIndex::Type FingerIndex, 
 {
 	bIsTouch = false;
 	OnSetDestinationReleased();
+}
+
+void ARPGPlayerController::CheckDistance(FVector playerPos, FVector destination)
+{
+	float distance = UKismetMathLibrary::Sqrt(UKismetMathLibrary::Pow(playerPos.X + destination.X, 2)+Pow(playerPos.Y + destination.Y, 2)+Pow(playerPos.Z + destination.Z, 2));
 }
