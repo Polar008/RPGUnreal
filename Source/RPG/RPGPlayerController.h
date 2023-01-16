@@ -41,7 +41,8 @@ protected:
 	void OnSetDestinationReleased();
 	void OnTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location);
-	void CheckDistance(FVector playerPos, FVector destination);
+
+	FVector CheckDistance(FVector playerPos, FVector destination);
 
 private:
 	bool bInputPressed; // Input is bring pressed
@@ -49,11 +50,11 @@ private:
 	float FollowTime; // For how long it has been pressed
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TurnSettings)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
 	bool canRun;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TurnSettings)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
 	bool canAttack;
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = TurnSettings)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
 	float maxMoveDistance;
 };
 

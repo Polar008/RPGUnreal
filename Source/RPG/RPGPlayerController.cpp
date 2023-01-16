@@ -6,6 +6,7 @@
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 #include "RPGCharacter.h"
+#include "VectorTypes.h"
 #include "Engine/World.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -19,14 +20,14 @@ void ARPGPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
 
-	if(bInputPressed)
+	if (bInputPressed)
 	{
 		FollowTime += DeltaTime;
 
 		// Look for the touch location
 		FVector HitLocation = FVector::ZeroVector;
 		FHitResult Hit;
-		if(bIsTouch)
+		if (bIsTouch)
 		{
 			GetHitResultUnderFinger(ETouchIndex::Touch1, ECC_Visibility, true, Hit);
 		}
@@ -37,12 +38,11 @@ void ARPGPlayerController::PlayerTick(float DeltaTime)
 		HitLocation = Hit.Location;
 
 		// Direct the Pawn towards that location
-		APawn* const MyPawn = GetPawn();
-		if(MyPawn)
-		{
-			FVector WorldDirection = (HitLocation - MyPawn->GetActorLocation()).GetSafeNormal();
-			MyPawn->AddMovementInput(WorldDirection, 1.f, false);
-		}
+		// if(MyPawn)
+		// {
+		// 	FVector WorldDirection = (HitLocation - MyPawn->GetActorLocation()).GetSafeNormal();
+		// 	MyPawn->AddMovementInput(WorldDirection, 1.f, false);
+		// }
 	}
 	else
 	{
@@ -61,7 +61,6 @@ void ARPGPlayerController::SetupInputComponent()
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ARPGPlayerController::OnTouchPressed);
 	InputComponent->BindTouch(EInputEvent::IE_Released, this, &ARPGPlayerController::OnTouchReleased);
-
 }
 
 void ARPGPlayerController::OnSetDestinationPressed()
@@ -78,17 +77,19 @@ void ARPGPlayerController::OnSetDestinationReleased()
 	bInputPressed = false;
 
 	// If it was a short press
-	if(FollowTime <= ShortPressThreshold)
+	if (FollowTime <= ShortPressThreshold)
 	{
 		// We look for the location in the world where the player has pressed the input
 		FVector HitLocation = FVector::ZeroVector;
 		FHitResult Hit;
 		GetHitResultUnderCursor(ECC_Visibility, true, Hit);
 		HitLocation = Hit.Location;
-
+		APawn* const MyPawn = GetPawn();
+		HitLocation = CheckDistance(MyPawn->GetActorLocation(), HitLocation);
 		// We move there and spawn some particles
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, HitLocation);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, HitLocation, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, HitLocation, FRotator::ZeroRotator,
+		                                               FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 	}
 }
 
@@ -104,7 +105,25 @@ void ARPGPlayerController::OnTouchReleased(const ETouchIndex::Type FingerIndex, 
 	OnSetDestinationReleased();
 }
 
-void ARPGPlayerController::CheckDistance(FVector playerPos, FVector destination)
+FVector ARPGPlayerController::CheckDistance(FVector playerPos, FVector destination)
 {
-	float distance = UKismetMathLibrary::Sqrt(UKismetMathLibrary::Pow(playerPos.X + destination.X, 2)+Pow(playerPos.Y + destination.Y, 2)+Pow(playerPos.Z + destination.Z, 2));
+	float distance = UKismetMathLibrary::Sqrt(
+		(FMath::Pow(playerPos.X - destination.X, 2)
+			+ FMath::Pow(playerPos.Y - destination.Y, 2) + FMath::Pow(
+				playerPos.Z - destination.Z, 2)));
+
+
+	if (distance > maxMoveDistance)
+	{
+		FVector dir = (destination - playerPos);
+		FVector newpos = playerPos + dir.GetSafeNormal2D() * maxMoveDistance;
+		return newpos;
+		// UE_LOG(LogTemp, Display, TEXT("New Pos: %f %f %f"), newPos.X, newPos.Y, newPos.Z);
+		// UE_LOG(LogTemp, Display, TEXT("Player Pos: %f %f %f"), playerPos.X, playerPos.Y, playerPos.Z);
+		// return newPos;
+	}
+	else
+	{
+		return destination;
+	}
 }
