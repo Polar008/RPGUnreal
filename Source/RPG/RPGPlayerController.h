@@ -3,6 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Hitable.h"
+#include "RPGGameMode.h"
+#include "Turnable.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -12,7 +15,7 @@
 class UNiagaraSystem;
 
 UCLASS()
-class ARPGPlayerController : public APlayerController
+class ARPGPlayerController : public APlayerController,public ITurnable, public IHitable
 {
 	GENERATED_BODY()
 
@@ -48,14 +51,19 @@ private:
 	bool bInputPressed; // Input is bring pressed
 	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed
+	ARPGGameMode* gm;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
-	bool canRun;
+	bool canRun = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
-	bool canAttack;
+	bool canAttack = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
 	float maxMoveDistance;
+	
+	virtual void endTurn_Implementation() override;
+	virtual void startTurn_Implementation() override;
+	virtual void onHit_Implementation(int attack, int dmg) override;
 };
 
 

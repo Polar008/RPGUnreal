@@ -8,12 +8,14 @@
 #include "RPGCharacter.h"
 #include "VectorTypes.h"
 #include "Engine/World.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 
 ARPGPlayerController::ARPGPlayerController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
+	gm = Cast<ARPGGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 }
 
 void ARPGPlayerController::PlayerTick(float DeltaTime)
@@ -77,7 +79,7 @@ void ARPGPlayerController::OnSetDestinationReleased()
 	bInputPressed = false;
 
 	// If it was a short press
-	if (FollowTime <= ShortPressThreshold)
+	if (FollowTime <= ShortPressThreshold && canRun)
 	{
 		// We look for the location in the world where the player has pressed the input
 		FVector HitLocation = FVector::ZeroVector;
@@ -90,6 +92,8 @@ void ARPGPlayerController::OnSetDestinationReleased()
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, HitLocation);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, HitLocation, FRotator::ZeroRotator,
 		                                               FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
+		canRun = false;
+		endTurn_Implementation();
 	}
 }
 
@@ -127,3 +131,35 @@ FVector ARPGPlayerController::CheckDistance(FVector playerPos, FVector destinati
 		return destination;
 	}
 }
+
+void ARPGPlayerController::endTurn_Implementation()
+{
+	ITurnable::endTurn_Implementation();
+	canAttack = false;
+	canRun = false;
+	gm->GiveNextTurn();
+}
+
+void ARPGPlayerController::startTurn_Implementation()
+{
+	ITurnable::startTurn_Implementation();
+	canAttack = true;
+	canRun = true;
+}
+
+void ARPGPlayerController::onHit_Implementation(int attack, int dmg)
+{
+	IHitable::onHit_Implementation(attack, dmg);
+	if(attack >= ac)
+	{
+		hp-=dmg;
+		if (hp<=0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Me muero"));
+		}
+	}
+	
+}
+
+
+
