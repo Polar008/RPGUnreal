@@ -5,11 +5,15 @@
 #include "CoreMinimal.h"
 #include "Hitable.h"
 #include "RPGGameMode.h"
+#include "SkillDT.h"
 #include "Turnable.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "RPGPlayerController.generated.h"
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkill, AActor*,enemy, FSkillDT, skill);
 
 /** Forward declaration to improve compiling times */
 class UNiagaraSystem;
@@ -30,6 +34,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UNiagaraSystem* FXCursor;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnSkill evOnSkill;
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
