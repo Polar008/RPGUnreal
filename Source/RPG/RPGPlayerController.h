@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Hitable.h"
+#include "RPGCharacter.h"
 #include "RPGGameMode.h"
 #include "SkillDT.h"
 #include "Turnable.h"
@@ -13,7 +14,9 @@
 #include "RPGPlayerController.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkill, AActor*,enemy, FSkillDT, skill);
+class ARPGCharacter;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnSkill, AActor*, enemy, FSkillDT, skill);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttack, AActor*, enemy);
 
 /** Forward declaration to improve compiling times */
 class UNiagaraSystem;
@@ -36,6 +39,11 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FOnSkill evOnSkill;
+	UPROPERTY(BlueprintAssignable)
+	FOnAttack evOnAttack;
+
+	UFUNCTION(BlueprintCallable)
+	ARPGCharacter* getMyPlayerCharacter() const { return Cast<ARPGCharacter>(GetPawn()); }
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
@@ -50,6 +58,7 @@ protected:
 	void OnSetDestinationReleased();
 	void OnTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location);
+	void OnRightTouchPressed();
 
 	FVector CheckDistance(FVector playerPos, FVector destination);
 

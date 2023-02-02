@@ -19,6 +19,8 @@ struct RPG_API FSkillDT : public FTableRowBase
 	int dmg;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float duration;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FVector Position;
 	
-	FSkillDT() : skill(nullptr), dmg(0), duration(1)  {}
+	FSkillDT() : skill(nullptr), dmg(0), duration(1), Position(FVector(0,0,0)) {}
 };

@@ -24,6 +24,7 @@ class RPG_API IHitable
 public:
 	int hp = 1;
 	int ac = 10;
-	UFUNCTION(BlueprintNativeEvent, Category = HitSetting)
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = HitSetting)
 	void onHit(int attack, int dmg);
+	
 };

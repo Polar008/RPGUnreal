@@ -60,6 +60,8 @@ void ARPGPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SetDestination", IE_Pressed, this, &ARPGPlayerController::OnSetDestinationPressed);
 	InputComponent->BindAction("SetDestination", IE_Released, this, &ARPGPlayerController::OnSetDestinationReleased);
 
+	InputComponent->BindAction("Attack", IE_Pressed, this, &ARPGPlayerController::OnRightTouchPressed);
+	
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ARPGPlayerController::OnTouchPressed);
 	InputComponent->BindTouch(EInputEvent::IE_Released, this, &ARPGPlayerController::OnTouchReleased);
@@ -101,6 +103,19 @@ void ARPGPlayerController::OnTouchPressed(const ETouchIndex::Type FingerIndex, c
 {
 	bIsTouch = true;
 	OnSetDestinationPressed();
+}
+
+void ARPGPlayerController::OnRightTouchPressed()
+{
+	FHitResult Hit;
+	GetHitResultUnderCursor(ECC_Visibility, true, Hit);
+	if(Hit.GetActor())
+	{
+		if(UKismetSystemLibrary::DoesImplementInterface(Hit.GetActor(),UHitable::StaticClass()))
+		{
+			evOnAttack.Broadcast(Hit.GetActor());
+		}
+	}
 }
 
 void ARPGPlayerController::OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location)
@@ -158,8 +173,9 @@ void ARPGPlayerController::onHit_Implementation(int attack, int dmg)
 			UE_LOG(LogTemp, Warning, TEXT("Me muero"));
 		}
 	}
-	
 }
+
+
 
 
 
