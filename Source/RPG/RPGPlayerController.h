@@ -22,7 +22,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttack, AActor*, enemy);
 class UNiagaraSystem;
 
 UCLASS()
-class ARPGPlayerController : public APlayerController,public ITurnable, public IHitable
+class ARPGPlayerController : public APlayerController,public ITurnable
 {
 	GENERATED_BODY()
 
@@ -59,6 +59,9 @@ protected:
 	void OnTouchPressed(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location);
 	void OnRightTouchPressed();
+	void On1SkillPressed();
+	void On2SkillPressed();
+	void On3SkillPressed();
 
 	FVector CheckDistance(FVector playerPos, FVector destination);
 
@@ -75,10 +78,18 @@ public:
 	bool canAttack = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
 	float maxMoveDistance;
+	UPROPERTY(BlueprintReadWrite, BlueprintReadWrite, Category=DATATABLES)
+	UDataTable* ClassData;
+	UPROPERTY(BlueprintReadWrite, BlueprintReadWrite)
+	FName className; 
+
+	
+	
+
 	
 	virtual void endTurn_Implementation() override;
 	virtual void startTurn_Implementation() override;
-	virtual void onHit_Implementation(int attack, int dmg) override;
+
 };
 
 

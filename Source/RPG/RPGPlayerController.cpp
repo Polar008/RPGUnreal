@@ -1,6 +1,8 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "RPGPlayerController.h"
+
+#include "ClassData.h"
 #include "GameFramework/Pawn.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "NiagaraSystem.h"
@@ -61,6 +63,11 @@ void ARPGPlayerController::SetupInputComponent()
 	InputComponent->BindAction("SetDestination", IE_Released, this, &ARPGPlayerController::OnSetDestinationReleased);
 
 	InputComponent->BindAction("Attack", IE_Pressed, this, &ARPGPlayerController::OnRightTouchPressed);
+
+	InputComponent->BindAction("hab1", IE_Pressed, this, &ARPGPlayerController::On1SkillPressed);
+	InputComponent->BindAction("hab2", IE_Pressed, this, &ARPGPlayerController::On2SkillPressed);
+	InputComponent->BindAction("hab3", IE_Pressed, this, &ARPGPlayerController::On3SkillPressed);
+	
 	
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ARPGPlayerController::OnTouchPressed);
@@ -118,6 +125,51 @@ void ARPGPlayerController::OnRightTouchPressed()
 	}
 }
 
+void ARPGPlayerController::On1SkillPressed()
+{
+	static const FString context = FString("Getting skill1");
+	FClassData*  clase = ClassData->FindRow<FClassData>(className, context, true);
+	if (clase)
+	{
+		FHitResult Hit;
+		GetHitResultUnderCursor(ECC_Visibility, true, Hit);
+		if(UKismetSystemLibrary::DoesImplementInterface(Hit.GetActor(),UHitable::StaticClass()))
+		{
+			evOnSkill.Broadcast(Hit.GetActor(),clase->skill1);
+		}	}
+}
+
+void ARPGPlayerController::On2SkillPressed()
+{
+	static const FString context = FString("Getting skill1");
+	FClassData*  clase = ClassData->FindRow<FClassData>(className, context, true);
+	if (clase)
+	{
+		
+		FHitResult Hit;
+		GetHitResultUnderCursor(ECC_Visibility, true, Hit);
+		if(UKismetSystemLibrary::DoesImplementInterface(Hit.GetActor(),UHitable::StaticClass()))
+		{
+			evOnSkill.Broadcast(Hit.GetActor(),clase->skill2);
+		}
+	}
+}
+
+void ARPGPlayerController::On3SkillPressed()
+{
+	static const FString context = FString("Getting skill1");
+	FClassData*  clase = ClassData->FindRow<FClassData>(className, context, true);
+	if (clase)
+	{
+		FHitResult Hit;
+		GetHitResultUnderCursor(ECC_Visibility, true, Hit);
+		if(UKismetSystemLibrary::DoesImplementInterface(Hit.GetActor(),UHitable::StaticClass()))
+		{
+			evOnSkill.Broadcast(Hit.GetActor(),clase->skill3);
+		}	}
+}
+
+
 void ARPGPlayerController::OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	bIsTouch = false;
@@ -162,18 +214,6 @@ void ARPGPlayerController::startTurn_Implementation()
 	canRun = true;
 }
 
-void ARPGPlayerController::onHit_Implementation(int attack, int dmg)
-{
-	IHitable::onHit_Implementation(attack, dmg);
-	if(attack >= ac)
-	{
-		hp-=dmg;
-		if (hp<=0)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Me muero"));
-		}
-	}
-}
 
 
 

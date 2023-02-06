@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SkillDT.h"
 #include "Engine/DataTable.h"
 #include "ClassData.generated.h"
+
+
 UENUM(BlueprintType)
 enum EClases {
 	MAGE,
@@ -34,7 +37,13 @@ struct RPG_API FClassData : public FTableRowBase
 	int initialDMG;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int initialSpeed;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	struct FSkillDT skill1;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	struct FSkillDT skill2;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	struct FSkillDT skill3;
 	
 	
-	FClassData() : myclass(WARRIOR), initialBody(0), initialMind(0), bodyOnLvl(0), mindOnLvl(0), initialDMG(4), initialSpeed(500){}
+	FClassData() : myclass(WARRIOR), initialBody(0), initialMind(0), bodyOnLvl(0), mindOnLvl(0), initialDMG(4), initialSpeed(500), skill1(), skill2(), skill3(){}
 };

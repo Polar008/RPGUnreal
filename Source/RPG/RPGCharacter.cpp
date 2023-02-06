@@ -1,15 +1,19 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "RPGCharacter.h"
+
+#include "ClassData.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/DecalComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Engine/DataTable.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+
 
 ARPGCharacter::ARPGCharacter()
 {
@@ -45,7 +49,34 @@ ARPGCharacter::ARPGCharacter()
 	PrimaryActorTick.bStartWithTickEnabled = true;
 }
 
+
+
 void ARPGCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+}
+
+void ARPGCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	static const FString context = FString("Getting stats");
+	FClassData* clase = ClassData->FindRow<FClassData>(className, context, true);
+
+	Body = clase->initialBody;
+	Mind = clase->initialMind;
+	
+	
+}
+
+void ARPGCharacter::onHit_Implementation(int attack, int dmg)
+{
+	IHitable::onHit_Implementation(attack, dmg);
+	if(attack >= ac)
+	{
+		hp-=dmg;
+		if (hp<=0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Me muero"));
+		}
+	}
 }
