@@ -78,7 +78,7 @@ public:
 	bool canAttack = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
 	float maxMoveDistance;
-	UPROPERTY(BlueprintReadWrite, BlueprintReadWrite, Category=DATATABLES)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=DATATABLES)
 	UDataTable* ClassData;
 	UPROPERTY(BlueprintReadWrite, BlueprintReadWrite)
 	FName className; 

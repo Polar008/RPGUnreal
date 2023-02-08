@@ -45,9 +45,9 @@ public:
 	int initialDMG;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int initialSpeed;
-	UPROPERTY(BlueprintReadWrite, BlueprintReadWrite, Category=DATATABLES)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=DATATABLES)
 	UDataTable* ClassData;
-	UPROPERTY(BlueprintReadWrite, BlueprintReadWrite)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FName className;
 };
 

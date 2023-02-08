@@ -61,9 +61,9 @@ void ARPGCharacter::BeginPlay()
 	Super::BeginPlay();
 	static const FString context = FString("Getting stats");
 	FClassData* clase = ClassData->FindRow<FClassData>(className, context, true);
-
-	Body = clase->initialBody;
-	Mind = clase->initialMind;
+	
+	//Body = clase->initialBody;
+	//Mind = clase->initialMind;
 	
 	
 }
