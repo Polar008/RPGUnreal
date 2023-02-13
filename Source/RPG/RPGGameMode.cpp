@@ -32,6 +32,7 @@ ARPGGameMode::ARPGGameMode()
 void ARPGGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	indexTurn = 0;
 }
 
 void ARPGGameMode::SortByIbit()
@@ -44,8 +45,18 @@ void ARPGGameMode::SortByIbit()
 
 void ARPGGameMode::GiveNextTurn()
 {
-	if (entitys.Num() > 0)
-		entitys[indexTurn++ % entitys.Num()].GetInterface()->startTurn_Implementation();
+	//if (entitys.Num() > indexTurn++ % entitys.Num())
+	//	entitys[indexTurn % entitys.Num()]->startTurn_Implementation();
+	if (indexTurn < entitys.Num())
+	{
+		//Cast<ITurnable>(entitys[indexTurn].GetObject())->startTurn_Implementation();
+		entitys[indexTurn]->startTurn_Implementation();
+		indexTurn++;
+		if (indexTurn == entitys.Num())
+		{
+			indexTurn = 0;
+		}
+	}
 }
 
 void ARPGGameMode::insertEntitys()
@@ -56,5 +67,7 @@ void ARPGGameMode::insertEntitys()
 	{
 		TScriptInterface<ITurnable> Turn = act;
 		entitys.Add(Turn);
+		UE_LOG(LogTemp, Display, TEXT("me la chupas2222222222222"));
 	}
+	SortByIbit();
 }

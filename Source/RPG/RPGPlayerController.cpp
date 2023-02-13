@@ -3,6 +3,8 @@
 #include "RPGPlayerController.h"
 
 #include "ClassData.h"
+#include "NavigationPath.h"
+#include "NavigationSystem.h"
 #include "GameFramework/Pawn.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "NiagaraSystem.h"
@@ -18,6 +20,7 @@ ARPGPlayerController::ARPGPlayerController()
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
 	gm = Cast<ARPGGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+	initative = 20;
 }
 
 void ARPGPlayerController::PlayerTick(float DeltaTime)
@@ -67,7 +70,8 @@ void ARPGPlayerController::SetupInputComponent()
 	InputComponent->BindAction("hab1", IE_Pressed, this, &ARPGPlayerController::On1SkillPressed);
 	InputComponent->BindAction("hab2", IE_Pressed, this, &ARPGPlayerController::On2SkillPressed);
 	InputComponent->BindAction("hab3", IE_Pressed, this, &ARPGPlayerController::On3SkillPressed);
-	
+	InputComponent->BindAction("EndTurn", IE_Pressed, this, &ARPGPlayerController::OnEndTurnPressed);
+
 	
 	// support touch devices 
 	InputComponent->BindTouch(EInputEvent::IE_Pressed, this, &ARPGPlayerController::OnTouchPressed);
@@ -99,10 +103,11 @@ void ARPGPlayerController::OnSetDestinationReleased()
 		HitLocation = CheckDistance(MyPawn->GetActorLocation(), HitLocation);
 		// We move there and spawn some particles
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, HitLocation);
+		//UNavigationPath* path = UNavigationSystemV1::FindPathToLocationSynchronously(this,MyPawn->GetActorLocation(),HitLocation);
+		//path->GetPathLength();
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, HitLocation, FRotator::ZeroRotator,
 		                                               FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
 		canRun = false;
-		endTurn_Implementation();
 	}
 }
 
@@ -169,6 +174,11 @@ void ARPGPlayerController::On3SkillPressed()
 		}	}
 }
 
+void ARPGPlayerController::OnEndTurnPressed()
+{
+	endTurn_Implementation();
+}
+
 
 void ARPGPlayerController::OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
@@ -201,7 +211,6 @@ FVector ARPGPlayerController::CheckDistance(FVector playerPos, FVector destinati
 
 void ARPGPlayerController::endTurn_Implementation()
 {
-	ITurnable::endTurn_Implementation();
 	canAttack = false;
 	canRun = false;
 	gm->GiveNextTurn();
@@ -209,7 +218,6 @@ void ARPGPlayerController::endTurn_Implementation()
 
 void ARPGPlayerController::startTurn_Implementation()
 {
-	ITurnable::startTurn_Implementation();
 	canAttack = true;
 	canRun = true;
 }
