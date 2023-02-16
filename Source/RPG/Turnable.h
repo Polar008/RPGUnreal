@@ -23,10 +23,12 @@ class RPG_API ITurnable
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	int initative;
+	int initative = 0;
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = TurnSettings)
 	void startTurn();
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = TurnSettings)
 	void endTurn();
+	//UFUNCTION(BlueprintCallable)
+	//virtual inline int getInit() const { return initative; }
 	
 };

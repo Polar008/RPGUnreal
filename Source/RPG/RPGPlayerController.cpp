@@ -19,8 +19,13 @@ ARPGPlayerController::ARPGPlayerController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
+	initative = 10;
+}
+
+void ARPGPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
 	gm = Cast<ARPGGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	initative = 20;
 }
 
 void ARPGPlayerController::PlayerTick(float DeltaTime)
@@ -180,6 +185,7 @@ void ARPGPlayerController::OnEndTurnPressed()
 }
 
 
+
 void ARPGPlayerController::OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location)
 {
 	bIsTouch = false;
@@ -211,6 +217,8 @@ FVector ARPGPlayerController::CheckDistance(FVector playerPos, FVector destinati
 
 void ARPGPlayerController::endTurn_Implementation()
 {
+	UE_LOG(LogTemp, Display, TEXT("ending en %s"), *GetName());
+
 	canAttack = false;
 	canRun = false;
 	gm->GiveNextTurn();
@@ -218,6 +226,8 @@ void ARPGPlayerController::endTurn_Implementation()
 
 void ARPGPlayerController::startTurn_Implementation()
 {
+	UE_LOG(LogTemp, Display, TEXT("StartTurn en %s"), *GetName());
+
 	canAttack = true;
 	canRun = true;
 }

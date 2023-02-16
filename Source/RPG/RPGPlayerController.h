@@ -63,7 +63,7 @@ protected:
 	void On2SkillPressed();
 	void On3SkillPressed();
 	void OnEndTurnPressed();
-	
+	virtual void BeginPlay() override;
 	FVector CheckDistance(FVector playerPos, FVector destination);
 
 private:

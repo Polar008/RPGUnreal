@@ -20,16 +20,19 @@ public:
 
 	virtual void BeginPlay() override;
 	
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
+	TArray<TScriptInterface<ITurnable>> entitys;
 
 	UPROPERTY(BlueprintReadOnly, Category = TurnSettings)
 	int indexTurn;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
-	TArray<TScriptInterface<ITurnable>> entitys;
 	void SortByIbit();
 	UFUNCTION(BlueprintCallable)
 	void GiveNextTurn();
 	UFUNCTION(BlueprintCallable)
 	void insertEntitys();
+
+	UFUNCTION(BlueprintCallable)
+	inline TArray<TScriptInterface<ITurnable>> getEntities() const { return entitys; }
 };
 
 
