@@ -57,7 +57,7 @@ void ARPGGameMode::GiveNextTurn()
 	if (indexTurn < entitys.Num())
 	{
 		//Cast<ITurnable>(entitys[indexTurn].GetObject())->startTurn_Implementation();
-		entitys[indexTurn]->startTurn_Implementation();
+		entitys[indexTurn]->Execute_startTurn(entitys[indexTurn].GetObject());
 		indexTurn++;
 		if (indexTurn == entitys.Num())
 		{

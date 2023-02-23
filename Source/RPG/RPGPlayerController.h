@@ -73,6 +73,7 @@ private:
 	ARPGGameMode* gm;
 
 public:
+	bool hasTurn;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
 	bool canRun = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)

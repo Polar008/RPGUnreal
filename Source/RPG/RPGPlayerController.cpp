@@ -88,7 +88,7 @@ void ARPGPlayerController::OnSetDestinationPressed()
 	// We flag that the input is being pressed
 	bInputPressed = true;
 	// Just in case the character was moving because of a previous short press we stop it
-	StopMovement();
+	//StopMovement();
 }
 
 void ARPGPlayerController::OnSetDestinationReleased()
@@ -181,7 +181,11 @@ void ARPGPlayerController::On3SkillPressed()
 
 void ARPGPlayerController::OnEndTurnPressed()
 {
-	endTurn_Implementation();
+	if (hasTurn)
+	{
+		hasTurn = false;
+		endTurn_Implementation();
+	}
 }
 
 
@@ -230,6 +234,7 @@ void ARPGPlayerController::startTurn_Implementation()
 
 	canAttack = true;
 	canRun = true;
+	hasTurn = true;
 }
 
 
