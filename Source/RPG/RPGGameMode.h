@@ -30,6 +30,8 @@ public:
 	void GiveNextTurn();
 	UFUNCTION(BlueprintCallable)
 	void insertEntitys();
+	UFUNCTION(BlueprintCallable)
+	void RemoveEntity(TScriptInterface<ITurnable> entity);
 
 	UFUNCTION(BlueprintCallable)
 	inline TArray<TScriptInterface<ITurnable>> getEntities() const { return entitys; }

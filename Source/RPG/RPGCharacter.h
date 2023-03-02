@@ -23,6 +23,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool isSlashing;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widgets)
+	class UWidgetComponent* turnWidget;
+	
 protected:
 	virtual void BeginPlay() override;
 	
@@ -49,5 +52,9 @@ public:
 	UDataTable* ClassData;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FName className;
+
+public:
+	FORCEINLINE UWidgetComponent* GetWidget() const { return turnWidget; }
+
 };
 

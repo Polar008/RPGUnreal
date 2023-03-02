@@ -3,23 +3,22 @@
 #include "RPGPlayerController.h"
 
 #include "ClassData.h"
-#include "NavigationPath.h"
-#include "NavigationSystem.h"
 #include "GameFramework/Pawn.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 #include "RPGCharacter.h"
-#include "VectorTypes.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/WidgetComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 
 ARPGPlayerController::ARPGPlayerController()
 {
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
-	initative = 10;
+	initative = -100;
+	
+	
 }
 
 void ARPGPlayerController::BeginPlay()
@@ -226,6 +225,8 @@ void ARPGPlayerController::endTurn_Implementation()
 	canAttack = false;
 	canRun = false;
 	gm->GiveNextTurn();
+
+	getMyPlayerCharacter()->GetWidget()->SetVisibility(false);
 }
 
 void ARPGPlayerController::startTurn_Implementation()
@@ -235,6 +236,8 @@ void ARPGPlayerController::startTurn_Implementation()
 	canAttack = true;
 	canRun = true;
 	hasTurn = true;
+
+	getMyPlayerCharacter()->GetWidget()->SetVisibility(true);
 }
 
 

@@ -32,18 +32,29 @@ public:
 	/** Time Threshold to know if it was a short press */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	float ShortPressThreshold;
-
 	/** FX Class that we will spawn when clicking */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UNiagaraSystem* FXCursor;
-
 	UPROPERTY(BlueprintAssignable)
 	FOnSkill evOnSkill;
 	UPROPERTY(BlueprintAssignable)
 	FOnAttack evOnAttack;
 
+	bool hasTurn;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
+	bool canRun = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
+	bool canAttack = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
+	float maxMoveDistance;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=DATATABLES)
+	UDataTable* ClassData;
+	UPROPERTY(BlueprintReadWrite, BlueprintReadWrite)
+	FName className;
+
 	UFUNCTION(BlueprintCallable)
-	ARPGCharacter* getMyPlayerCharacter() const { return Cast<ARPGCharacter>(GetPawn()); }
+	FORCEINLINE ARPGCharacter* getMyPlayerCharacter() const { return Cast<ARPGCharacter>(GetPawn()); }
+
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
@@ -65,32 +76,15 @@ protected:
 	void OnEndTurnPressed();
 	virtual void BeginPlay() override;
 	FVector CheckDistance(FVector playerPos, FVector destination);
-
+	virtual void endTurn_Implementation() override;
+	virtual void startTurn_Implementation() override;
+	
 private:
 	bool bInputPressed; // Input is bring pressed
 	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed
 	ARPGGameMode* gm;
-
-public:
-	bool hasTurn;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
-	bool canRun = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
-	bool canAttack = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = TurnSettings)
-	float maxMoveDistance;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=DATATABLES)
-	UDataTable* ClassData;
-	UPROPERTY(BlueprintReadWrite, BlueprintReadWrite)
-	FName className; 
-
 	
-	
-
-	
-	virtual void endTurn_Implementation() override;
-	virtual void startTurn_Implementation() override;
 
 };
 

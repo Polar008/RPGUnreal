@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/DecalComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Engine/DataTable.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/PlayerController.h"
@@ -47,6 +48,10 @@ ARPGCharacter::ARPGCharacter()
 	// Activate ticking in order to update the cursor every frame.
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
+
+	turnWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("QuemaElTeclado"));
+	turnWidget->SetupAttachment(RootComponent);
+	turnWidget->SetVisibility(false);
 }
 
 
@@ -61,7 +66,10 @@ void ARPGCharacter::BeginPlay()
 	Super::BeginPlay();
 	static const FString context = FString("Getting stats");
 	FClassData* clase = ClassData->FindRow<FClassData>(className, context, true);
-	
+
+	FAttachmentTransformRules rules(EAttachmentRule::SnapToTarget, true);
+	turnWidget->AttachToComponent(GetMesh(), rules, TEXT("Head"));
+	hp = 30;
 	//Body = clase->initialBody;
 	//Mind = clase->initialMind;
 	
@@ -70,7 +78,6 @@ void ARPGCharacter::BeginPlay()
 
 void ARPGCharacter::onHit_Implementation(int attack, int dmg)
 {
-	IHitable::onHit_Implementation(attack, dmg);
 	if(attack >= ac)
 	{
 		hp-=dmg;

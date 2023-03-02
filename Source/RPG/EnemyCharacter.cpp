@@ -7,6 +7,7 @@
 #include "RPGGameMode.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values
 AEnemyCharacter::AEnemyCharacter()
@@ -14,6 +15,9 @@ AEnemyCharacter::AEnemyCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	turnWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("QuemaElTeclado"));
+	turnWidget->SetupAttachment(RootComponent);
+	turnWidget->SetVisibility(false);
 }
 
 // Called when the game starts or when spawned
@@ -29,7 +33,9 @@ void AEnemyCharacter::BeginPlay()
 		if (black)
 			UE_LOG(LogTemp, Display, TEXT("3"));
 	}
-	
+
+	FAttachmentTransformRules rules(EAttachmentRule::SnapToTarget, true);
+	turnWidget->AttachToComponent(GetMesh(), rules, TEXT("Head"));
 }
 
 // Called every frame
@@ -50,11 +56,11 @@ void AEnemyCharacter::endTurn_Implementation()
 {
 	if (black)
 	{
-		UE_LOG(LogTemp, Display, TEXT("SIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII"));
 		black->SetValueAsBool(FName("HasTurn"),false);
 		gm->GiveNextTurn();
 		black->ClearValue(FName("HasTurn"));
 	}
+	turnWidget->SetVisibility(false);
 }
 
 void AEnemyCharacter::startTurn_Implementation()
@@ -62,9 +68,22 @@ void AEnemyCharacter::startTurn_Implementation()
 	
 	if (black)
 	{
-		UE_LOG(LogTemp, Display, TEXT("cum in black"));
-
 		black->SetValueAsBool(FName("HasTurn"),true);
+	}
+	turnWidget->SetVisibility(true);
+}
+
+void AEnemyCharacter::onHit_Implementation(int attack, int dmg)
+{
+	if(attack >= ac)
+	{
+		hp-=dmg;
+		if (hp<=0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Me muero"));
+			gm->RemoveEntity(this);
+			Destroy();
+		}
 	}
 }
 
