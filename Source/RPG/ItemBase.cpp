@@ -26,16 +26,3 @@ void AItemBase::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 }
-
-void AItemBase::Equip_Implementation(ARPGCharacter* target)
-{
-	target->ac += ACIncrese;
-	target->hp += hpIncrese;
-}
-
-void AItemBase::UnEquip_Implementation(ARPGCharacter* target)
-{
-	target->ac -= ACIncrese;
-	target->hp -= hpIncrese;
-}
-

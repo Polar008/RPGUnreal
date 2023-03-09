@@ -16,6 +16,9 @@ public:
 	// Sets default values for this actor's properties
 	AItemBase();
 
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly)
+	FEquipableData mEquipableData;
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -23,6 +26,4 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void Equip_Implementation(ARPGCharacter* target) override;
-	virtual void UnEquip_Implementation(ARPGCharacter* target) override;
 };

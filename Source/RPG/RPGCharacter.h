@@ -20,9 +20,11 @@ public:
 	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool isSlashing;
-	
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TArray<FName> equipedItems;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=Widgets)
 	class UWidgetComponent* turnWidget;
 	
@@ -52,9 +54,13 @@ public:
 	UDataTable* ClassData;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FName className;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UDataTable* items;
 
 public:
 	FORCEINLINE UWidgetComponent* GetWidget() const { return turnWidget; }
+	void EquipItem(FName itemName);
+	void UnEquipItem(FName itemName);
 
 };
 

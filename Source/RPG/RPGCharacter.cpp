@@ -3,6 +3,8 @@
 #include "RPGCharacter.h"
 
 #include "ClassData.h"
+#include "ItemsDT.h"
+#include "K2Node_SpawnActorFromClass.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Camera/CameraComponent.h"
 #include "Components/DecalComponent.h"
@@ -52,6 +54,10 @@ ARPGCharacter::ARPGCharacter()
 	turnWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("QuemaElTeclado"));
 	turnWidget->SetupAttachment(RootComponent);
 	turnWidget->SetVisibility(false);
+
+	equipedItems.Add(TEXT(""));
+	equipedItems.Add(TEXT(""));
+	equipedItems.Add(TEXT(""));
 }
 
 void ARPGCharacter::Tick(float DeltaSeconds)
@@ -88,4 +94,29 @@ void ARPGCharacter::onHit_Implementation(int attack, int dmg)
 			UE_LOG(LogTemp, Warning, TEXT("Me muero"));
 		}
 	}
+}
+
+void ARPGCharacter::EquipItem(FName itemName)
+{
+	static const FString context = FString("Getting skill1");
+	FItemsDT* item = items->FindRow<FItemsDT>(itemName, context, true);
+	if(equipedItems[item->slot] != "")
+	{
+		UnEquipItem(equipedItems[item->slot]);
+
+	}
+	DMG += item->dmgIncrease;
+	hp += item->hpIncrease;
+	ac += item->acIncrease;
+}
+
+void ARPGCharacter::UnEquipItem(FName itemName)
+{
+	static const FString context = FString("Getting skill1");
+	FItemsDT* item = items->FindRow<FItemsDT>(itemName, context, true);
+	DMG -= item->dmgIncrease;
+	hp -= item->hpIncrease;
+	ac -= item->acIncrease;
+	FActorSpawnParameters SpawnInfo;
+	auto* it =  GetWorld()->SpawnActor<AActor>(item->ownwer->GetClass(), GetActorLocation(), GetActorRotation(), SpawnInfo);
 }

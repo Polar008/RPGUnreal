@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Engine/DataTable.h"
 #include "UObject/Interface.h"
 #include "Equipable.generated.h"
 
@@ -21,11 +22,13 @@ class RPG_API IEquipable
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
-public:
-	int hpIncrese;
-	int ACIncrese;
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = TurnSettings)
-	void Equip(ARPGCharacter* target);
-	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = TurnSettings)
-	void UnEquip(ARPGCharacter* target);
+};
+
+USTRUCT(BlueprintType)
+struct FEquipableData
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FName name;
 };
