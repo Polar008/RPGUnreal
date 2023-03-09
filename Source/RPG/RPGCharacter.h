@@ -45,7 +45,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int Mind;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
-	int initialDMG;
+	int DMG;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	int initialSpeed;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category=DATATABLES)

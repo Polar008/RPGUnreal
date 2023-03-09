@@ -54,8 +54,6 @@ ARPGCharacter::ARPGCharacter()
 	turnWidget->SetVisibility(false);
 }
 
-
-
 void ARPGCharacter::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
@@ -69,11 +67,15 @@ void ARPGCharacter::BeginPlay()
 
 	FAttachmentTransformRules rules(EAttachmentRule::SnapToTarget, true);
 	turnWidget->AttachToComponent(GetMesh(), rules, TEXT("Head"));
-	hp = 30;
-	//Body = clase->initialBody;
-	//Mind = clase->initialMind;
-	
-	
+	hp = 3;
+
+	if(clase)
+	{
+		Body = clase->initialBody;
+		Mind = clase->initialMind;
+		DMG = clase->initialDMG;
+	}
+	ac = 10 + Body;
 }
 
 void ARPGCharacter::onHit_Implementation(int attack, int dmg)
