@@ -16,6 +16,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Materials/Material.h"
 #include "Engine/World.h"
+#include "Microsoft/COMPointer.h"
 
 
 ARPGCharacter::ARPGCharacter()
@@ -54,10 +55,7 @@ ARPGCharacter::ARPGCharacter()
 	turnWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("QuemaElTeclado"));
 	turnWidget->SetupAttachment(RootComponent);
 	turnWidget->SetVisibility(false);
-
-	equipedItems.Add(TEXT(""));
-	equipedItems.Add(TEXT(""));
-	equipedItems.Add(TEXT(""));
+	
 }
 
 void ARPGCharacter::Tick(float DeltaSeconds)
@@ -67,6 +65,9 @@ void ARPGCharacter::Tick(float DeltaSeconds)
 
 void ARPGCharacter::BeginPlay()
 {
+	equipedItems.Add(TEXT(""));
+	equipedItems.Add(TEXT(""));
+	equipedItems.Add(TEXT(""));
 	Super::BeginPlay();
 	static const FString context = FString("Getting stats");
 	FClassData* clase = ClassData->FindRow<FClassData>(className, context, true);
@@ -98,9 +99,11 @@ void ARPGCharacter::onHit_Implementation(int attack, int dmg)
 
 void ARPGCharacter::EquipItem(FName itemName)
 {
-	static const FString context = FString("Getting skill1");
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Equiped")));
+
+	static const FString context = FString("Getting item to equip");
 	FItemsDT* item = items->FindRow<FItemsDT>(itemName, context, true);
-	if(equipedItems[item->slot] != "")
+	if(equipedItems[item->slot] != TEXT(""))
 	{
 		UnEquipItem(equipedItems[item->slot]);
 
@@ -112,7 +115,9 @@ void ARPGCharacter::EquipItem(FName itemName)
 
 void ARPGCharacter::UnEquipItem(FName itemName)
 {
-	static const FString context = FString("Getting skill1");
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("unEquiped")));
+
+	static const FString context = FString("Getting item to drop");
 	FItemsDT* item = items->FindRow<FItemsDT>(itemName, context, true);
 	DMG -= item->dmgIncrease;
 	hp -= item->hpIncrease;

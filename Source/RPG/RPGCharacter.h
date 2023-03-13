@@ -1,6 +1,11 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#include "Windows.h"
+#include "Windows/WindowsWindow.h"
+#endif
 
 #include "CoreMinimal.h"
 #include "Hitable.h"
@@ -54,7 +59,7 @@ public:
 	UDataTable* ClassData;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	FName className;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=DATATABLES)
 	UDataTable* items;
 
 public:

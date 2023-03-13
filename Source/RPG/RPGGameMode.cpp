@@ -50,8 +50,6 @@ void ARPGGameMode::SortByIbit()
 void ARPGGameMode::GiveNextTurn()
 {
 	if(this==NULL)return;
-	//if (entitys.Num() > indexTurn++ % entitys.Num())
-	//	entitys[indexTurn % entitys.Num()]->startTurn_Implementation();
 	UE_LOG(LogTemp, Display, TEXT("Index de entitys %d"),indexTurn);
 	//UE_LOG(LogTemp, Display, TEXT("Giving next turn from %s -> %s"), *entitys[indexTurn].GetObject()->GetName(), *entitys[indexTurn+1%entitys.Num()].GetObject()->GetName());
 	if (indexTurn == entitys.Num())

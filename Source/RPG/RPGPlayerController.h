@@ -51,6 +51,14 @@ public:
 	UDataTable* ClassData;
 	UPROPERTY(BlueprintReadWrite, BlueprintReadWrite)
 	FName className;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FSkillDT skill1;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FSkillDT skill2;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	FSkillDT skill3;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UDataTable* items;
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE ARPGCharacter* getMyPlayerCharacter() const { return Cast<ARPGCharacter>(GetPawn()); }
@@ -74,6 +82,7 @@ protected:
 	void On2SkillPressed();
 	void On3SkillPressed();
 	void OnEndTurnPressed();
+	void OnEquipPressed();
 	virtual void BeginPlay() override;
 	FVector CheckDistance(FVector playerPos, FVector destination);
 	virtual void endTurn_Implementation() override;

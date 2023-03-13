@@ -3,6 +3,9 @@
 #include "RPGPlayerController.h"
 
 #include "ClassData.h"
+#include "Equipable.h"
+#include "ItemBase.h"
+#include "ItemsDT.h"
 #include "GameFramework/Pawn.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "NiagaraFunctionLibrary.h"
@@ -71,9 +74,11 @@ void ARPGPlayerController::SetupInputComponent()
 
 	InputComponent->BindAction("Attack", IE_Pressed, this, &ARPGPlayerController::OnRightTouchPressed);
 
+	InputComponent->BindAction("Equipar", IE_Pressed, this, &ARPGPlayerController::OnEquipPressed);
 	InputComponent->BindAction("hab1", IE_Pressed, this, &ARPGPlayerController::On1SkillPressed);
 	InputComponent->BindAction("hab2", IE_Pressed, this, &ARPGPlayerController::On2SkillPressed);
 	InputComponent->BindAction("hab3", IE_Pressed, this, &ARPGPlayerController::On3SkillPressed);
+	InputComponent->BindAction("EndTurn", IE_Pressed, this, &ARPGPlayerController::OnEndTurnPressed);
 	InputComponent->BindAction("EndTurn", IE_Pressed, this, &ARPGPlayerController::OnEndTurnPressed);
 
 	
@@ -150,23 +155,18 @@ void ARPGPlayerController::On1SkillPressed()
 
 void ARPGPlayerController::On2SkillPressed()
 {
-	static const FString context = FString("Getting skill1");
-	FClassData*  clase = ClassData->FindRow<FClassData>(className, context, true);
-	if (clase)
+	FHitResult Hit;
+	GetHitResultUnderCursor(ECC_Visibility, true, Hit);
+	if(UKismetSystemLibrary::DoesImplementInterface(Hit.GetActor(),UHitable::StaticClass()))
 	{
-		
-		FHitResult Hit;
-		GetHitResultUnderCursor(ECC_Visibility, true, Hit);
-		if(UKismetSystemLibrary::DoesImplementInterface(Hit.GetActor(),UHitable::StaticClass()))
-		{
-			evOnSkill.Broadcast(Hit.GetActor(),clase->skill2);
-		}
+		evOnSkill.Broadcast(Hit.GetActor(),skill2);
 	}
+	
 }
 
 void ARPGPlayerController::On3SkillPressed()
 {
-	static const FString context = FString("Getting skill1");
+	static const FString context = FString("Getting skill3");
 	FClassData*  clase = ClassData->FindRow<FClassData>(className, context, true);
 	if (clase)
 	{
@@ -187,6 +187,40 @@ void ARPGPlayerController::OnEndTurnPressed()
 	}
 }
 
+void ARPGPlayerController::OnEquipPressed()
+{
+	FHitResult Hit;
+	GetHitResultUnderCursor(ECC_Visibility, true, Hit);
+	if(Hit.GetActor())
+	{
+		if(UKismetSystemLibrary::DoesImplementInterface(Hit.GetActor(),UEquipable::StaticClass()))
+		{
+			ARPGCharacter* ch = getMyPlayerCharacter();
+			AItemBase* ib = Cast<AItemBase>(Hit.GetActor());
+			if(ib && ch)
+			{
+				ch->EquipItem(ib->mEquipableData.name);
+				static const FString context = FString("Getting skill1");
+				FItemsDT* item = items->FindRow<FItemsDT>(ib->mEquipableData.name, context, true);
+				switch (item->slot)
+				{
+				case 0:
+					skill1 = item->skill;
+					break;
+				case 1:
+					skill2 = item->skill;
+					break;
+				case 2:
+					skill3 = item->skill;
+					break;
+				default:
+					break;
+				}
+			}
+			
+		}
+	}
+}
 
 
 void ARPGPlayerController::OnTouchReleased(const ETouchIndex::Type FingerIndex, const FVector Location)
