@@ -40,4 +40,7 @@ public:
 	FORCEINLINE UWidgetComponent* GetWidget() const { return turnWidget; }
 
 	virtual void onHit_Implementation(int attack, int dmg) override;
+	
+	UFUNCTION(BlueprintCallable)
+	void showLvlUp();
 };

@@ -61,11 +61,17 @@ public:
 	FName className;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category=DATATABLES)
 	UDataTable* items;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int Exp;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	int lvl;
 
 public:
 	FORCEINLINE UWidgetComponent* GetWidget() const { return turnWidget; }
-	void EquipItem(FName itemName);
-	void UnEquipItem(FName itemName);
+	void EquipItem(const FName& itemName);
+	void UnEquipItem(const FName& itemName);
+	UFUNCTION(BlueprintCallable)
+	void LvlUp(int vida, int armadura, int male);
 
 };
 

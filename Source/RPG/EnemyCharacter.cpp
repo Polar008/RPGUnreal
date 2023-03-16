@@ -82,8 +82,14 @@ void AEnemyCharacter::onHit_Implementation(int attack, int dmg)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Me muero"));
 			gm->RemoveEntity(this);
+			showLvlUp();
 			Destroy();
 		}
 	}
+}
+
+void AEnemyCharacter::showLvlUp()
+{
+	gm->evOnLevelUp.Broadcast();// SetVisibility(ESlateVisibility::Visible);
 }
 

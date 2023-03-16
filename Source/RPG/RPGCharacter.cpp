@@ -3,6 +3,7 @@
 #include "RPGCharacter.h"
 
 #include "ClassData.h"
+#include "ItemBase.h"
 #include "ItemsDT.h"
 #include "K2Node_SpawnActorFromClass.h"
 #include "UObject/ConstructorHelpers.h"
@@ -97,7 +98,7 @@ void ARPGCharacter::onHit_Implementation(int attack, int dmg)
 	}
 }
 
-void ARPGCharacter::EquipItem(FName itemName)
+void ARPGCharacter::EquipItem(const FName& itemName)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Equiped")));
 
@@ -108,12 +109,13 @@ void ARPGCharacter::EquipItem(FName itemName)
 		UnEquipItem(equipedItems[item->slot]);
 
 	}
+	equipedItems[item->slot] = itemName;
 	DMG += item->dmgIncrease;
 	hp += item->hpIncrease;
 	ac += item->acIncrease;
 }
 
-void ARPGCharacter::UnEquipItem(FName itemName)
+void ARPGCharacter::UnEquipItem(const FName& itemName)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("unEquiped")));
 
@@ -123,5 +125,16 @@ void ARPGCharacter::UnEquipItem(FName itemName)
 	hp -= item->hpIncrease;
 	ac -= item->acIncrease;
 	FActorSpawnParameters SpawnInfo;
-	auto* it =  GetWorld()->SpawnActor<AActor>(item->ownwer->GetClass(), GetActorLocation(), GetActorRotation(), SpawnInfo);
+	SpawnInfo.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+	const FVector& pos {GetActorLocation()};
+	const FRotator& rot {GetActorRotation()};
+	GetWorld()->SpawnActor<AItemBase>(item->ownwer, pos, rot, SpawnInfo);
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, FString::Printf(TEXT("Afterspawn")));
+}
+
+void ARPGCharacter::LvlUp(int vida, int armadura, int male)
+{
+	ac += armadura;
+	hp += vida;
+	DMG += male;
 }
